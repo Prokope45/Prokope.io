@@ -4,74 +4,89 @@ Author: Jared Paubel
 Version: 0.1
 """
 from django.test import TestCase
-from photologue.models import Gallery as PhotoLogueGallery
-from apps.gallery.models import PhotoGallery
+from apps.gallery.models import (
+    City, Country, CountryAlbum, CountryPhoto, CityGallery
+)
+from django.utils.text import slugify
 
 
-class PhotoGalleryModelTests(TestCase):
-    """Photo gallery model tests."""
+class CountryAlbumModelTests(TestCase):
+    """Country Album model tests."""
 
     def setUp(self):
         """Create clean test data for each test."""
-        self.gallery1 = PhotoLogueGallery.objects.create(
-            title="Nature",
-            slug="nature"
+        self.france = Country.objects.create(name="France")
+        self.country_1 = CountryAlbum.objects.create(
+            country=self.france,
         )
-        self.gallery2 = PhotoLogueGallery.objects.create(
-            title="Urban",
-            slug="urban"
+        self.japan = Country.objects.create(name="Japan")
+        self.country_2 = CountryAlbum.objects.create(
+            country=self.japan,
         )
 
-    def test_create_photogallery(self):
-        """Test creation of new country gallery."""
-        pg = PhotoGallery.objects.create(
-            country="France",
-            content="A beautiful photo collection from France.",
-            slug="france-gallery"
-        )
-        pg.galleries.set([self.gallery1, self.gallery2])
-        pg.save()
-
-        self.assertEqual(pg.country, "France")
-        self.assertEqual(pg.slug, "france-gallery")
-        self.assertEqual(
-            pg.content,
-            "A beautiful photo collection from France."
-        )
-        self.assertEqual(pg.galleries.count(), 2)
+    def test_create_country_album(self):
+        """Test creation of a new country album."""
+        self.assertEqual(self.country_1.country.name, "France")
+        self.assertEqual(self.country_1.slug, "france")
 
     def test_model_name(self):
         """Test model name."""
-        pg = PhotoGallery.objects.create(
-            country="Japan",
-            content="Japanese collection"
-        )
-        self.assertEqual(str(pg), "Japan")
+        self.assertEqual(str(self.country_1), "France")
 
-    def test_ordering_by_country(self):
-        """Test ordering of galleries by country."""
-        PhotoGallery.objects.create(
-            country="Brazil",
-            content="Photos from Brazil"
-        )
-        PhotoGallery.objects.create(
-            country="Argentina",
-            content="Photos from Argentina"
-        )
-        PhotoGallery.objects.create(
-            country="Canada",
-            content="Photos from Canada"
+    def test_slug_creation(self):
+        """Test slug is created automatically."""
+        self.assertEqual(
+            self.country_1.slug,
+            slugify(self.country_1.country.name)
         )
 
-        countries = list(PhotoGallery.objects.values_list(
-            "country", flat=True
-        ))
-        self.assertEqual(countries, ["Argentina", "Brazil", "Canada"])
 
-    def test_slug_blank(self):
-        """Test that slug is blank if not specified."""
-        pg = PhotoGallery.objects.create(
-            country="Italy",
-            content="Italian gallery"
+class CityGalleryModelTests(TestCase):
+    """City Album model tests."""
+
+    def setUp(self):
+        """Create clean test data for each test."""
+        self.italy = Country.objects.create(name="Italy")
+        self.country = CountryAlbum.objects.create(
+            country=self.italy,
         )
-        self.assertEqual(pg.slug, "")
+        self.rome = City.objects.create(name="Rome", country=self.italy)
+        self.city_1 = CityGallery.objects.create(
+            album=self.country,
+            city=self.rome
+        )
+
+    def test_create_city_album(self):
+        """Test creation of a new city album."""
+        self.assertEqual(self.city_1.city.name, "Rome")
+
+    def test_model_name(self):
+        """Test model name."""
+        self.assertEqual(str(self.city_1), "Italy - Rome")
+
+
+class CountryPhotoModelTests(TestCase):
+    """Country Photo model tests."""
+
+    def setUp(self):
+        """Create clean test data for each test."""
+        self.spain = Country.objects.create(name="Spain")
+        self.country_album = CountryAlbum.objects.create(country=self.spain)
+        self.city = City.objects.create(name="Barcelona", country=self.spain)
+        self.city_gallery = CityGallery.objects.create(
+            album=self.country_album,
+            city=self.city
+        )
+        self.photo_1 = CountryPhoto.objects.create(
+            city=self.city,
+            country=self.spain,
+            title="Park Güell",
+        )
+
+    def test_create_country_photo(self):
+        """Test creation of country photo."""
+        self.assertEqual(self.photo_1.title, "Park Güell")
+
+    def test_model_name(self):
+        """Test model name."""
+        self.assertEqual(str(self.photo_1), "Park Güell")

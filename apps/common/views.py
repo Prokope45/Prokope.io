@@ -11,7 +11,7 @@ import re
 
 from apps.index.models import Index
 from apps.blog.models import Post
-from apps.gallery.models import PhotoGallery
+from apps.gallery.models import CountryAlbum
 
 
 def custom_bad_request_view(request, exception=None):
@@ -80,11 +80,12 @@ def search(request: HttpRequest) -> HttpResponse:
                 Q(id__in=tag_ids)  # Search in tags
             ).distinct()
 
-            gallery_results = PhotoGallery.objects.filter(
-                Q(country__icontains=query) |
-                Q(content__icontains=query) |
-                Q(galleries__title__icontains=query) |
-                Q(galleries__description__icontains=query)
+            gallery_results = CountryAlbum.objects.filter(
+                Q(country__name__icontains=query) |
+                Q(title__icontains=query) |
+                Q(city_galleries__city__name__icontains=query) |
+                Q(city_galleries__photos__title__icontains=query) |
+                Q(city_galleries__photos__caption__icontains=query)
             ).distinct()
 
     context = {

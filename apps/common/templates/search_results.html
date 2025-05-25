@@ -110,8 +110,8 @@
                                     </h4>
                                     <div class="mb-2">
                                         <div class="row photo-row justify-content-center">
-                                            {% for gallery in result.galleries.all %}
-                                                {% for photo in gallery.public|slice:":6" %}
+                                            {% for gallery in result.city_galleries.all %}
+                                                {% for photo in gallery.photos.all|slice:":5" %}
                                                     <img
                                                         class="travel-photo m-2 "
                                                         src="{{ photo.get_thumbnail_url }}"

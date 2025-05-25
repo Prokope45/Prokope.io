@@ -13,49 +13,32 @@
     <body>
         {% include 'navbar.html' %}
         <div id='content' class="mt-4">
-            <div class="container">
-                <h1 class="text-center mb-4">Travel Gallery</h1>
-                <div class="card">
-                    <div class="card-body">
-                        {% for image in gallery_info %}
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <h2 class="card-title"><a href="{% url 'gallery_detail' image.slug  %}">{{ image.country }}</a></h2>
-                                    <p class="card-text">{{ image.content }}</p>
-                                </div>
-                            </div>
-                            {% for gallery in image.galleries.all|slice:":1" %}
-                                <div class="row photo-row justify-content-center">
-                                    {% for photo in gallery.public|slice:":6" %}
-                                        <a
-                                            title="{{ photo.title }} on {{ photo.date_taken }}"
-                                            href="{{ photo.get_display_url }}"
-                                            data-lightbox="{{ gallery }}"
-                                            class="m-2"
-                                        >
-                                            <img
-                                                class="travel-photo"
-                                                src="{{ photo.get_thumbnail_url }}"
-                                                alt="{{ photo.title }}: {{ photo.caption }}"
-                                                loading="lazy"
-                                            >
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            {% endfor %}
-
-                            {% if image.country != gallery_info.last.country %}
-                                <hr class="my-4" />
-                            {% endif %}
-                        {% endfor %}
+          <div class="container">
+            <h1 class="text-center mb-4">Travel Gallery</h1>
+            <div class="row justify-content-center">
+              {% for album in albums %}
+                <a id="carousel-link" class="col-lg-3 col-md-4 col-sm-6 col-xs-6 p-0" href="{% url 'gallery_detail' album.slug %}">
+                  <div id="hover-carousel" class="carousel">
+                    <div class="carousel-inner">
+                      {% for photo in album.city_galleries.first.photos.all|slice:":5" %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                          <img src="{{ photo.get_display_url }}" class="d-block w-100" alt="{{ photo.title }}">
+                          <div class="carousel-caption d-flex h-100 align-items-center justify-content-center">
+                            <h5>{{ album.country }}</h5>
+                          </div>
+                        </div>
+                      {% endfor %}
                     </div>
-                </div>
+                  </div>
+                </a>
+              {% endfor %}
             </div>
+          </div>
         </div>
         {% include 'footer.html' %}
     </body>
 {% endblock gallery %}
 
 {% block extra_script_links %}
-    <script src="{% static 'lightbox/js/lightbox-plus-jquery.js' %}"></script>
+  <script src="{% static 'js/gallery.js' %}"></script>
 {% endblock %}

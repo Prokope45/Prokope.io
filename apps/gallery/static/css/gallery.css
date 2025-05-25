@@ -21,3 +21,66 @@
 [data-theme="dark"] .lb-data .lb-caption, .lb-number {
     color: var(--heliotrope) !important;
 }
+
+#masonry-container {
+    width: 100%;
+}
+
+.gallery_product {
+    margin: 0px;
+    padding: 0px;
+    position:relative;
+}
+
+.gallery_product img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.gallery_product a {
+    width: fit-content;
+}
+
+.hidden {
+    display: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-button-container {
+    width: 145px;
+}
+
+@media (max-width: 767px) {
+    .back-button-container {
+        display: none;
+    }
+    .controls {
+        justify-content: flex-end;
+    }
+}
+.carousel-item {
+    height: 300px;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel-caption h5 {
+    font-size: 2em;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#carousel-link {
+    text-decoration: none;
+    color: inherit;
+}

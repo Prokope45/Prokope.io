@@ -4,7 +4,7 @@
 @import "buttons/buttons.css";
 @import "contact/contact.css";
 @import "contact/media_queries.css";
-@import "form/input.css";
+@import "form/control.css";
 @import "search.css";
 
 img {
@@ -96,7 +96,8 @@ img {
 
     --select-bg-color: var(--white);
     --select-text-color: var(--dark-gray);
-    --select-border-color: var(--white);
+    --select-text-highlight-color: var(--cyber-grape);
+    --select-border-color: var(--wisteria);
 
     --button-bg-color: var(--pale-purple);
     --button-border-color: var(--iris);
@@ -146,6 +147,7 @@ img {
     /* #495057 */
     --select-bg-color: #333;
     --select-text-color: var(--pale-purple);
+    --select-text-highlight-color: var(--iris);
     --select-border-color: var(--iris);
 
     --button-bg-color: var(--iris);
